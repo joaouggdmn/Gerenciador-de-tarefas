@@ -28,11 +28,11 @@ function App() {
   ]);
 
   //ATUALIZA O ESTADO DE UMA TAREFA
-  function onTaskClick(taskId){
-    const newTasks = tasks.map(task => {
+  function onTaskClick(taskId) {
+    const newTasks = tasks.map((task) => {
       //PRECISO ATUALIZAR ESSA TAREFA
-      if(task.id === taskId){
-        return { ...task, isCompleted: !task.isCompleted }
+      if (task.id === taskId) {
+        return { ...task, isCompleted: !task.isCompleted };
       }
 
       //NAO PRECISO ATUALIZAR ESSA TAREFA
@@ -40,7 +40,12 @@ function App() {
     });
 
     setTasks(newTasks);
+  }
 
+  function onTaskDelete(taskId) {
+    //Para alterar o número de elementos de um array não usamos .map()
+    const newTasks = tasks.filter((task) => task.id !== taskId); //pega os elementos que sao diferentes da tarefa deletada e joga para um novo array
+    setTasks(newTasks);
   }
 
   return (
@@ -50,7 +55,11 @@ function App() {
           GERENCIADOR DE TAREFAS
         </h1>
         <AddTask />
-        <Tasks tasks={tasks} onTaskClick={onTaskClick} />
+        <Tasks
+          tasks={tasks}
+          onTaskClick={onTaskClick}
+          onTaskDelete={onTaskDelete}
+        />
       </div>
     </div>
   );
