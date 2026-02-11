@@ -7,7 +7,7 @@ import TaskDetails from './pages/TaskDetails.jsx'
 
 const router = createBrowserRouter([
   {
-    path: "/home",
+    path: "/",
     element: <App />
   },
   {
