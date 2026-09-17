@@ -1,17 +1,23 @@
 import { useEffect, useState } from "react";
 import AddTask from "./components/AddTask";
 import Tasks from "./components/Tasks";
-import { v4 } from "uuid";
+import api from "./services/api";
 
 function App() {
-  const [tasks, setTasks] = useState(
-    JSON.parse(localStorage.getItem("tasks")) || [],
-  );
+  const [tasks, setTasks] = useState([]);
 
-  useEffect(
-    () => localStorage.setItem("tasks", JSON.stringify(tasks)),
-    [tasks],
-  );
+  const loadTasks = async () => {
+    try {
+      const resposta = await api.get("/tasks");
+      setTasks(resposta.data);
+    } catch (error) {
+      console.error("Erro ao carregar as tarefas:", error);
+    }
+  };
+
+  useEffect(() => {
+    loadTasks();
+  }, []);
 
   //ATUALIZA O ESTADO DE UMA TAREFA
   function onTaskClick(taskId) {
@@ -34,14 +40,16 @@ function App() {
     setTasks(newTasks);
   }
 
-  function onAddTaskSubmit(title, description) {
-    const newTask = {
-      id: v4(),
-      title,
-      description,
-      isCompleted: false,
-    };
-    setTasks([...tasks, newTask]);
+  async function onAddTaskSubmit(title, description) {
+    try{
+      const response = await api.post("/tasks", { title, description });
+      console.log(response.data);
+
+      setTasks([...tasks, response.data]);
+
+    }catch(error){
+      console.error("Erro ao adicionar a tarefa:", error);
+    }
   }
 
   return (
